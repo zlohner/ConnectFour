@@ -28,7 +28,6 @@ class Board(object):
 		self.grid[row][col] = Square()
 		self.playedLocations = self.playedLocations[:-1]
 
-
 	def legalMove(self, col):
 		if col >= 0 and col < len(self.grid[0]):
 			row = self.findOpen(col)
