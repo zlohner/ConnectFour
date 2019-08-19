@@ -2,12 +2,12 @@
 
 colors = {
 	'MAGENTA' : '\033[95m',
-    'BLUE' : '\033[94m',
-    'GREEN' : '\033[92m',
-    'YELLOW' : '\033[93m',
-    'RED' : '\033[91m',
+	'BLUE' : '\033[94m',
+	'GREEN' : '\033[92m',
+	'YELLOW' : '\033[93m',
+	'RED' : '\033[91m',
 	'GREY' : '\033[90m',
-    'WHITE' : '\033[0m',
+	'WHITE' : '\033[0m',
 }
 
 def getColor(colorStr):
