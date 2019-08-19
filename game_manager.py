@@ -9,6 +9,7 @@ from simpleai import SimpleAIPlayer
 from surviveai import SurviveAIPlayer
 from aggressiveai import AggressiveAIPlayer
 from minmaxai import MinMaxAIPlayer
+from experimental_minmaxai import ExperimentalMinMaxAIPlayer
 from colors import *
 
 NONE = '0'
@@ -22,12 +23,13 @@ class GameManager(object):
 
 	def __init__(self):
 		self.players = []
+		self.players.append(HumanPlayer(name='Guest', tag='O', color=getColor('WHITE')))
 		self.players.append(EasyAIPlayer())
 		self.players.append(SimpleAIPlayer())
 		self.players.append(SurviveAIPlayer())
 		self.players.append(AggressiveAIPlayer())
 		self.players.append(MinMaxAIPlayer())
-		self.players.append(MinMaxAIPlayer(name='MinMax AI (depth 5)', tag='$', color=colors['GREY'], maxDepth=5))
+		self.players.append(ExperimentalMinMaxAIPlayer())
 		self.game = None
 
 	def menu(self):
@@ -113,7 +115,7 @@ class GameManager(object):
 
 		for i in range(0, numGames):
 			self.game = Game(board=Board(), player1=p1, player2=p2)
-			self.playGame(True)
+			self.playGame(numGames == 1)
 
 
 if __name__ == '__main__':

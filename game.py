@@ -27,7 +27,7 @@ class Game(object):
 			slot = self.currentPlayer.getMove(self.board, self.nextPlayer)
 
 		self.board.drop(self.currentPlayer, slot)
-		if self.board.consecutive(self.winLength):
+		if self.board.consecutive(self.winLength, self.currentPlayer.coloredTag()):
 			self.playing = False
 			self.winner = self.currentPlayer
 			self.loser = self.nextPlayer

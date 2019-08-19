@@ -15,7 +15,7 @@ class SimpleAIPlayer(AIPlayer):
 	def willWin(self, board, col):
 		willWin = False
 		board.drop(self, col)
-		if board.consecutive(n=self.winLength):
+		if board.consecutive(self.winLength, self.coloredTag()):
 			willWin = True
 		board.undo()
 		return willWin
@@ -25,7 +25,7 @@ class SimpleAIPlayer(AIPlayer):
 		board.drop(self, col)
 		if board.legalMove(col):
 			board.drop(self, col)
-			if board.consecutive(n=4):
+			if board.consecutive(self.winLength, self.coloredTag()):
 				willWinNext = True
 			board.undo()
 		board.undo()
@@ -34,7 +34,7 @@ class SimpleAIPlayer(AIPlayer):
 	def willLose(self, board, col, opponent):
 		willLose = False
 		board.drop(opponent, col)
-		if board.consecutive(n=4):
+		if board.consecutive(self.winLength, opponent.coloredTag()):
 			willLose = True
 		board.undo()
 		return willLose
@@ -44,7 +44,7 @@ class SimpleAIPlayer(AIPlayer):
 		board.drop(self, col)
 		if board.legalMove(col):
 			board.drop(opponent, col)
-			if board.consecutive(n=4):
+			if board.consecutive(self.winLength, opponent.coloredTag()):
 				willLoseNext = True
 			board.undo()
 		board.undo()
