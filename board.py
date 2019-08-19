@@ -4,12 +4,7 @@ from square import Square
 
 class Board(object):
 	def __init__(self, col=7, row=6):
-		self.grid = []
-		for r in range(row):
-			nextRow = []
-			for c in range(col):
-				nextRow.append(Square())
-			self.grid.append(nextRow)
+		self.grid = [[Square() for c in range(col)] for r in range(row)]
 		self.playedLocations = []
 
 	def open(self, position):

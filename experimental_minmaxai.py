@@ -11,7 +11,6 @@ class ExperimentalMinMaxAIPlayer(MinMaxAIPlayer):
 		MinMaxAIPlayer.__init__(self, name, tag, color, setup)
 
 	def evaluate(self, board, opponent, depth):
-		# TODO: make evaluation function more robust
 		evaluation = 0
 		for x in range(len(board.grid)):
 			for y in range(len(board.grid[0])):
