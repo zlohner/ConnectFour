@@ -5,7 +5,7 @@ from colors import *
 
 class HumanPlayer(Player):
 		def __init__(self, name='', tag='', color=None, setup='NO_SETUP'):
-			Player.__init__(self,name,tag,color,setup)
+			Player.__init__(self, name, tag, color, setup)
 
 			if setup == 'MANUAL_SETUP':
 				self.name = raw_input('Enter your name: ')
