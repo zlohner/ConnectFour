@@ -9,7 +9,7 @@ class Board(object):
 
 	def open(self, position):
 		(x, y) = position
-		if x > len(self.grid) or y > len(self.grid[x]):
+		if x >= len(self.grid) or y >= len(self.grid[x]) or x < 0 or y < 0:
 			return False
 		return self.grid[x][y].tag == ' '
 
