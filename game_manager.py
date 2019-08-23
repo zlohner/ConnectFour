@@ -63,7 +63,7 @@ class GameManager(object):
 				running = False
 
 			else:
-				print 'Please enter a valid option (1-3)'
+				print 'Please enter a valid option (1-5)'
 
 	def playersStr(self):
 		sb = []
