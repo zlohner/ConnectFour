@@ -36,7 +36,6 @@ class Game(object):
 		else:
 			self.switchTurn()
 
-
 	def switchTurn(self):
 		swap = self.currentPlayer
 		self.currentPlayer = self.nextPlayer

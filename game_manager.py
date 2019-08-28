@@ -9,7 +9,6 @@ from simpleai import SimpleAIPlayer
 from surviveai import SurviveAIPlayer
 from aggressiveai import AggressiveAIPlayer
 from minmaxai import MinMaxAIPlayer
-from experimental_minmaxai import ExperimentalMinMaxAIPlayer
 from colors import *
 
 NONE = '0'
@@ -28,8 +27,8 @@ class GameManager(object):
 		self.players.append(SimpleAIPlayer())
 		self.players.append(SurviveAIPlayer())
 		self.players.append(AggressiveAIPlayer())
-		self.players.append(MinMaxAIPlayer())
-		self.players.append(ExperimentalMinMaxAIPlayer())
+		self.players.append(MinMaxAIPlayer(name='Weak MinmaxAI'))
+		self.players.append(MinMaxAIPlayer(name='Strong MinmaxAI', tag='@', color=colors['GREY'], setup='NO_SETUP', maxTime=20))
 		self.game = None
 
 	def menu(self):
@@ -73,7 +72,7 @@ class GameManager(object):
 
 	def choosePlayer(self, num):
 		player = -1
-		while player > len(self.players) or player < 0:
+		while player >= len(self.players) or player < 0:
 			player = int(raw_input('Choose player ' + str(num) + '(1-' + str(len(self.players)) + '): ')) - 1
 		return self.players[player]
 

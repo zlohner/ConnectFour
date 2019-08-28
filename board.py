@@ -15,7 +15,7 @@ class Board(object):
 
 	def findOpen(self, col):
 		for r in range(-1, -(len(self.grid) + 1), -1):
-			if self.open((r, col)):
+			if self.open(((r % len(self.grid)), col)):
 				return r % len(self.grid)
 		return -1
 
@@ -74,11 +74,16 @@ class Board(object):
 				return True
 			return self.consecutive(n - 1, tag, ((x + dx), (y + dy)), delta, gaps)
 
+	def consecutiveThrough(self, n, tag, position):
+		(x, y) = position
+		return \
+			any([self.consecutive(n, tag, position=(x - k, y), delta=(1, 0), gaps=1) for k in range(n)]) or \
+			any([self.consecutive(n, tag, position=(x, y - k), delta=(0, 1), gaps=1) for k in range(n)]) or \
+			any([self.consecutive(n, tag, position=(x - k, y - k), delta=(1, 1), gaps=1) for k in range(n)]) or \
+			any([self.consecutive(n, tag, position=(x + k, y - k), delta=(-1, 1), gaps=1) for k in range(n)])
+
 	def draw(self):
-		draw = True
-		for i in range(0, len(self.grid[0])):
-			draw = draw and not self.legalMove(i)
-		return draw
+		return not any([self.legalMove(i) for i in range(len(self.grid[0]))])
 
 	def key(self):
 		s = []

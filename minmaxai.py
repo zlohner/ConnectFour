@@ -8,32 +8,44 @@ from ai import AIPlayer
 from colors import *
 
 class MinMaxAIPlayer(AIPlayer):
-	def __init__(self, name='MinMax AI', tag='&', color=colors['BLUE'], setup='NO_SETUP', maxTime=20):
+	def __init__(self, name='MinMax AI', tag='&', color=colors['BLUE'], setup='NO_SETUP', maxTime=5):
 		AIPlayer.__init__(self, name, tag, color, setup)
 		self.mem = {}
 		self.maxTime = maxTime
 
 	def evaluate(self, board, opponent, depth):
-		evaluation = 0
-		for x in range(len(board.grid)):
+		if board.consecutive(self.winLength, self.coloredTag()):
+			return (sys.maxsize - depth)
+		elif board.consecutive(self.winLength, opponent.coloredTag()):
+			return (-sys.maxsize + depth)
+		else:
+			evaluation = 0
 			for y in range(len(board.grid[0])):
-				if board.consecutive((self.winLength - 1), self.coloredTag(), position=(x,y), gaps=1):
-					evaluation += 1
-				if board.consecutive((self.winLength - 1), opponent.coloredTag(), position=(x,y), gaps=1):
-					evaluation -= 1
+				for x in range((len(board.grid) - 1), -1, -1):
+					if (board.open((x, y))):
+						myThreat = board.consecutiveThrough(self.winLength, self.coloredTag(), position=(x,y))
+						oppThreat = board.consecutiveThrough(self.winLength, opponent.coloredTag(), position=(x,y))
 
-		return evaluation
+						if myThreat and oppThreat:
+							break
+						elif myThreat:
+							evaluation += 1
+						elif oppThreat:
+							evaluation -= 1
+
+			return evaluation
 
 	def minimax(self, board, opponent, maxDepth, depth=0, alpha=-sys.maxsize, beta=sys.maxsize, max=True):
-		if not (board.key(), max, depth, maxDepth) in self.mem:
+		key = (board.key(), max, depth, maxDepth)
+		if not key in self.mem:
 			if board.consecutive(self.winLength, self.coloredTag()):
-				self.mem[(board.key(), max, depth, maxDepth)] = ((sys.maxsize - depth), -1)
+				self.mem[key] = ((sys.maxsize - depth), -1)
 			elif board.consecutive(self.winLength, opponent.coloredTag()):
-				self.mem[(board.key(), max, depth, maxDepth)] = ((-sys.maxsize + depth), -1)
+				self.mem[key] = ((-sys.maxsize + depth), -1)
 			elif not any([board.legalMove(i) for i in range(0, len(board.grid[0]))]):
-				self.mem[(board.key(), max, depth, maxDepth)] = (0, -1)
+				self.mem[key] = (0, -1)
 			elif depth == maxDepth:
-				self.mem[(board.key(), max, depth, maxDepth)] = (self.evaluate(board, opponent, depth), -1)
+				self.mem[key] = (self.evaluate(board, opponent, depth), -1)
 			else:
 				cols = [3, 2, 4, 1, 5, 0, 6]
 				value = 0
@@ -68,9 +80,10 @@ class MinMaxAIPlayer(AIPlayer):
 
 							if value < beta:
 								beta = value
-				self.mem[(board.key(), max, depth, maxDepth)] = (value, move)
 
-		return self.mem[(board.key(), max, depth, maxDepth)]
+				self.mem[key] = (value, move)
+
+		return self.mem[key]
 
 	def getMove(self, board, opponent):
 		start = time()
@@ -85,17 +98,17 @@ class MinMaxAIPlayer(AIPlayer):
 				value <= -sys.maxsize + board.remainingMoves():
 				break
 
-		print 'evaluated to depth:', str(depth)
+		print 'evaluated to depth:', depth
 		print 'move:', (move + 1)
-		if value >= sys.maxsize - board.remainingMoves():
-			evaluation = 'win in %d moves' % depth
-		elif value > 7:
+		if value >= (sys.maxsize - board.remainingMoves()):
+			evaluation = 'win in %d moves' % (depth - 1)
+		elif value > 3:
 			evaluation = 'advantaged'
 		elif value > 0:
 			evaluation = 'slightly advantaged'
-		elif value <= -sys.maxsize + board.remainingMoves():
-			evaluation = 'loss in %d moves' % depth
-		elif value < -7:
+		elif value <= (-sys.maxsize + board.remainingMoves()):
+			evaluation = 'loss in %d moves' % (depth - 1)
+		elif value < -3:
 			evaluation = 'disadvantaged'
 		elif value < 0:
 			evaluation = 'slightly disadvantaged'
