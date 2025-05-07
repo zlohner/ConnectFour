@@ -5,59 +5,58 @@ import copy
 
 from ai import AIPlayer
 from board import Board
-from colors import *
+import colors
 
 class SimpleAIPlayer(AIPlayer):
-	def __init__(self, name='Simple AI', tag='*', color=colors['MAGENTA'], setup='NO_SETUP'):
+	def __init__(self, name='Simple AI', tag='*', color=colors.colors['MAGENTA'], setup='NO_SETUP'):
 		AIPlayer.__init__(self, name, tag, color, setup)
 		random.seed()
 
-	def willWin(self, board, col):
-		willWin = False
+	def will_win(self, board, col):
+		will_win = False
 		board.drop(self, col)
-		if board.consecutive(self.winLength, self.coloredTag()):
-			willWin = True
+		if board.consecutive(self.target_length, self.tag()):
+			will_win = True
 		board.undo()
-		return willWin
+		return will_win
 
-	def willWinNext(self, board, col):
-		willWinNext = False
+	def will_win_next(self, board, col):
+		will_win_next = False
 		board.drop(self, col)
-		if board.legalMove(col):
+		if board.legal(col):
 			board.drop(self, col)
-			if board.consecutive(self.winLength, self.coloredTag()):
-				willWinNext = True
+			if board.consecutive(self.target_length, self.tag()):
+				will_win_next = True
 			board.undo()
 		board.undo()
-		return willWinNext
+		return will_win_next
 
-	def willLose(self, board, col, opponent):
-		willLose = False
+	def will_lose(self, board, col, opponent):
+		will_lose = False
 		board.drop(opponent, col)
-		if board.consecutive(self.winLength, opponent.coloredTag()):
-			willLose = True
+		if board.consecutive(self.target_length, opponent.tag()):
+			will_lose = True
 		board.undo()
-		return willLose
+		return will_lose
 
-	def willLoseNext(self, board, col, opponent):
-		willLoseNext = False
+	def will_lose_next(self, board, col, opponent):
+		will_lose_next = False
 		board.drop(self, col)
-		if board.legalMove(col):
+		if board.legal(col):
 			board.drop(opponent, col)
-			if board.consecutive(self.winLength, opponent.coloredTag()):
-				willLoseNext = True
+			if board.consecutive(self.target_length, opponent.tag()):
+				will_lose_next = True
 			board.undo()
 		board.undo()
-		return willLoseNext
+		return will_lose_next
 
-	def getMove(self, board, opponent):
+	def move(self, board, opponent):
 		move = random.randint(0, len(board.grid[0]))
-		cols = range(0, len(board.grid[0]))
+		cols = list(range(0, len(board.grid[0])))
 		random.shuffle(cols)
 		for col in cols:
-			if board.legalMove(col):
-				if self.willWin(board, col):
-					move = col
-					break
+			if board.legal(col) and self.will_win(board, col):
+				move = col
+				break
 
 		return move

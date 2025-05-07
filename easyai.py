@@ -4,12 +4,12 @@ import random
 
 from ai import AIPlayer
 from board import Board
-from colors import *
+import colors
 
 class EasyAIPlayer(AIPlayer):
-	def __init__(self, name='Easy AI', tag='!', color=colors['GREEN'], setup='NO_SETUP'):
+	def __init__(self, name='Easy AI', tag='!', color=colors.colors['GREEN'], setup='NO_SETUP'):
 		AIPlayer.__init__(self, name, tag, color, setup)
 		random.seed()
 
-	def getMove(self, board, opponent):
+	def move(self, board, opponent):
 		return random.randint(0, len(board.grid[0]))

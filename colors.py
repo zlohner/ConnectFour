@@ -10,19 +10,16 @@ colors = {
 	'WHITE' : '\033[0m',
 }
 
-def getColor(colorStr):
-	colorStr = colorStr.upper()
+def color(name):
+	name = name.upper()
 
-	if colorStr == 'LIST':
-		print colorList()
+	if name == 'LIST':
+		print(color_list())
 
-	if colorStr == 'pink':
-		colorStr = 'magenta'
-
-	if colorStr in colors:
-		return colors[colorStr]
+	if name in colors:
+		return colors[name]
 	else:
 		return None
 
-def colorList():
-	return ', '.join((val + c + colors['WHITE']) for (c,val) in colors.items()) + colors['WHITE'];
+def color_list():
+	return ', '.join((val + c + colors['WHITE']) for (c,val) in colors.items()) + colors['WHITE']

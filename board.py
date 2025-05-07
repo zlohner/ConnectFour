@@ -1,11 +1,25 @@
 #!/usr/bin/env python
 
-from square import Square
+class Square(object):
+	def __init__(self, tag=' '):
+		self.tag = tag
+
+	def __str__(self):
+		return self.tag
+
+	def __eq__(self, other):
+		return self.tag == other.tag
+
+	def key(self):
+		if self.tag == ' ':
+			return '-'
+		else:
+			return self.tag
 
 class Board(object):
 	def __init__(self, col=7, row=6):
 		self.grid = [[Square() for c in range(col)] for r in range(row)]
-		self.playedLocations = []
+		self.history = []
 
 	def open(self, position):
 		(x, y) = position
@@ -13,13 +27,13 @@ class Board(object):
 			return False
 		return self.grid[x][y].tag == ' '
 
-	def findOpen(self, col):
+	def find_open(self, col):
 		for r in range(-1, -(len(self.grid) + 1), -1):
 			if self.open(((r % len(self.grid)), col)):
 				return r % len(self.grid)
 		return -1
 
-	def remainingMoves(self):
+	def remaining_moves(self):
 		count = 0
 		for x in range(len(self.grid)):
 			for y in range(len(self.grid[x])):
@@ -28,18 +42,18 @@ class Board(object):
 		return count
 
 	def drop(self, player, col):
-		row = self.findOpen(col)
-		self.playedLocations.append((row, col))
-		self.grid[row][col] = Square(player.coloredTag())
+		row = self.find_open(col)
+		self.history.append((row, col))
+		self.grid[row][col] = Square(player.tag())
 
 	def undo(self):
-		(row, col) = self.playedLocations[-1]
+		(row, col) = self.history[-1]
 		self.grid[row][col] = Square()
-		self.playedLocations = self.playedLocations[:-1]
+		self.history = self.history[:-1]
 
-	def legalMove(self, col):
+	def legal(self, col):
 		if col >= 0 and col < len(self.grid[0]):
-			row = self.findOpen(col)
+			row = self.find_open(col)
 			return row != -1
 		else:
 			return False
@@ -74,7 +88,7 @@ class Board(object):
 				return True
 			return self.consecutive(n - 1, tag, ((x + dx), (y + dy)), delta, gaps)
 
-	def consecutiveThrough(self, n, tag, position):
+	def consecutive_through(self, n, tag, position):
 		(x, y) = position
 		return \
 			any([self.consecutive(n, tag, position=(x - k, y), delta=(1, 0), gaps=1) for k in range(n)]) or \
@@ -83,7 +97,7 @@ class Board(object):
 			any([self.consecutive(n, tag, position=(x + k, y - k), delta=(-1, 1), gaps=1) for k in range(n)])
 
 	def draw(self):
-		return not any([self.legalMove(i) for i in range(len(self.grid[0]))])
+		return not any([self.legal(i) for i in range(len(self.grid[0]))])
 
 	def key(self):
 		s = []
